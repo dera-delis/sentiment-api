@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
+from optimum.onnxruntime import ORTModelForSequenceClassification
+from transformers import AutoTokenizer, pipeline
 
 from app.config import Settings
 
@@ -18,9 +18,10 @@ class SentimentService:
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
         tokenizer = AutoTokenizer.from_pretrained(settings.model_name)
-        model = AutoModelForSequenceClassification.from_pretrained(
+        model = ORTModelForSequenceClassification.from_pretrained(
             settings.model_name,
-            low_cpu_mem_usage=True,
+            export=True,
+            provider="CPUExecutionProvider",
         )
         self._pipeline = pipeline(
             "sentiment-analysis",
@@ -31,8 +32,7 @@ class SentimentService:
         )
 
     def analyze(self, text: str) -> SentimentResult:
-        with torch.inference_mode():
-            scores = self._pipeline(text)[0]
+        scores = self._pipeline(text)[0]
         score_map = {item["label"].upper(): float(item["score"]) for item in scores}
         positive = score_map.get("POSITIVE", 0.0)
         negative = score_map.get("NEGATIVE", 0.0)
