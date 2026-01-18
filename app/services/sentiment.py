@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer, pipeline
@@ -17,10 +18,18 @@ class SentimentResult:
 class SentimentService:
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
-        tokenizer = AutoTokenizer.from_pretrained(settings.model_name)
+        model_path = Path(settings.model_path)
+        if model_path.is_dir():
+            model_source = model_path.as_posix()
+            export = False
+        else:
+            model_source = settings.model_name
+            export = True
+
+        tokenizer = AutoTokenizer.from_pretrained(model_source)
         model = ORTModelForSequenceClassification.from_pretrained(
-            settings.model_name,
-            export=True,
+            model_source,
+            export=export,
             provider="CPUExecutionProvider",
         )
         self._pipeline = pipeline(

@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     )
 
     model_name: str = "distilbert-base-uncased-finetuned-sst-2-english"
+    model_path: str = "/app/model"
     neutral_margin: float = 0.1
     log_level: str = "INFO"
 
