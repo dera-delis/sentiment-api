@@ -1,8 +1,6 @@
 .venv/
 __pycache__/
 .pytest_cache/
-.env
-.env.*
 !.env.example
 .cache/
 .DS_Store
@@ -11,5 +9,6 @@ __pycache__/
 *.pyd
 *.swp
 .idea/
-.vscode/
 
+config.bat
+node_modules

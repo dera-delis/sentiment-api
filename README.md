@@ -1,5 +1,8 @@
 # Sentiment Analysis API
 
+![Cloud Run](https://img.shields.io/badge/deploy-Cloud%20Run-4285F4)
+![Python](https://img.shields.io/badge/python-3.11-3776AB)
+
 Production-grade FastAPI microservice that runs transformer-based sentiment analysis using
 `distilbert-base-uncased-finetuned-sst-2-english`.
 
@@ -36,6 +39,10 @@ Rules:
 - Empty or whitespace-only text returns 422
 
 `GET /health` → `{ "status": "ok" }`
+
+## Production
+- Base URL: `https://sentiment-api-742824180889.us-central1.run.app`
+- Docs: `https://sentiment-api-742824180889.us-central1.run.app/docs`
 
 ## Local Run
 ```bash
